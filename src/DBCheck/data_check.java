@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class data_check {
-	static Connection conn;
-	static PreparedStatement pstmt;
+	private static Connection conn;
+	private static PreparedStatement pstmt;
 	
 	// 회원DB에서 아이디와 비밀번호가 있는지 확인하는 메소드
 	public boolean check(String id, String password) throws SQLException {

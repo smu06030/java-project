@@ -43,13 +43,13 @@ class ImagePanel extends JPanel{
 }
 
 public class login extends JFrame implements ActionListener{
-	static Connection conn;
-	static PreparedStatement pstmt;
-	data_check checking;
-	Container ct;
-	JButton login,newMember,search;
-	JTextField id;
-	JPasswordField password;
+	private static Connection conn;
+	private static PreparedStatement pstmt;
+	private data_check checking;
+	private Container ct;
+	private JButton login,newMember,search;
+	private JTextField id;
+	private JPasswordField password;
 	
 	login(){
 		ct = getContentPane();

@@ -15,19 +15,18 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class newMember extends JFrame {
-	String phones[] = {"010","011","017","019"};
-	String emails[] = {"naver.com","google.com","nate.com","daum.net","hanmail.com"};
-	Vector<String> year = new Vector<String>();
-	Vector<String> month = new Vector<String>();
-	Vector<String> day = new Vector<String>();
+	private String phones[] = {"010","011","017","019"};
+	private String emails[] = {"naver.com","google.com","nate.com","daum.net","hanmail.com"};
+	private Vector<String> year = new Vector<String>();
+	private Vector<String> month = new Vector<String>();
+	private Vector<String> day = new Vector<String>();
 	
-	JLabel id,password,password_check,name,birth,phone,email,email2;
-	JTextField id_field,name_field,birth_field,phone_field,email_field;
-	JPasswordField p_field,pCheck_field;
-	JButton check,join,close;
-	JComboBox year_box, month_box, day_box, phone_box, email_box;
-	
-	Container ct;
+	private JLabel id,password,password_check,name,birth,phone,email,email2;
+	private JTextField id_field,name_field,birth_field,phone_field,email_field;
+	private JPasswordField p_field,pCheck_field;
+	private JButton check,join,close;
+	private JComboBox year_box, month_box, day_box, phone_box, email_box;
+	private Container ct;
 	
 	newMember(){
 		ct = getContentPane();

@@ -17,18 +17,18 @@ import DBCheck.data_check;
 
 public class userMain extends JFrame implements ActionListener {
 	// Client 객체 생성
-	Client client = new Client();
+	private Client client = new Client();
 	// DB 사용
-	data_check checking;
-	clock c;
+	private data_check checking;
+	private clock c;
 	
-	String ip,id = null;
-	int port,rand,pcNumber,hour = 0,minute = 0,sec = 15;
-	String pcNum;
+	private String ip,id = null;
+	private int port,rand,pcNumber,hour = 0,minute = 0,sec = 15;
+	private String pcNum;
 	
-	Container ct;
-	JLabel pclabel,idLabel,idview,hourLabel,hourview;
-	JButton close,food,member_info;
+	private Container ct;
+	private JLabel pclabel,idLabel,idview,hourLabel,hourview;
+	private JButton close,food,member_info;
 	
 	userMain(String ip, int port,int rand, String id,int hour, int minute, int sec){
 		this.ip = ip;

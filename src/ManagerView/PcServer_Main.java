@@ -22,23 +22,23 @@ import javax.swing.border.LineBorder;
 
 public class PcServer_Main extends JFrame implements MouseListener, ActionListener {
 
-	JTextArea txt = new JTextArea(5,8);
-	String btnName[] = {"寸老郴开","雀盔包府","惑前包府","瘤免"};
-	Container ct;
-	static JPanel pcFrame[] = new pcFrame[10];
-	JPanel top = new JPanel();
-	JPanel center = new JPanel();
-	JPanel bottom = new JPanel();
-	static JLabel label1 = new JLabel();
-	JLabel label[] = new JLabel[5];
-	JButton btn[] = new JButton[4];
+	private JTextArea txt = new JTextArea(5,8);
+	private String btnName[] = {"寸老郴开","雀盔包府","惑前包府","瘤免"};
+	private Container ct;
+	private static JPanel pcFrame[] = new pcFrame[10];
+	private JPanel top = new JPanel();
+	private JPanel center = new JPanel();
+	private JPanel bottom = new JPanel();
+	private static JLabel label1 = new JLabel();
+	private JLabel label[] = new JLabel[5];
+	private JButton btn[] = new JButton[4];
 	
-	static int count = 10;
-	static int cnt = 0;
-	static int pcbun = 0;
+	private static int count = 10;
+	private static int cnt = 0;
+	private static int pcbun = 0;
 	
-	int x = 200, y = 100;
-	int seat;
+	private int x = 200, y = 100;
+	private int seat;
 	
 	PcServer_Main(){
 		ct = getContentPane();		

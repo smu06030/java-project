@@ -16,17 +16,17 @@ import ManagerView.PcServer_Main;
 public class Client {
 
 	Socket socket;
-	Container ct;
-	DataInputStream in;
-	DataOutputStream out;
+	private Container ct;
+	private DataInputStream in;
+	private DataOutputStream out;
 	
 	// 현재 pc 번호
 	int pcNumber = 0;
-	String name;
-	String ids;
+	private String name;
+	private String ids;
 	
-	PcServer_Main pcTest;
-	data_check checking;
+	private PcServer_Main pcTest;
+	private data_check checking;
 	
 	Client(){
 		
