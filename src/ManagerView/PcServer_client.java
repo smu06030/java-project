@@ -33,7 +33,7 @@ public class PcServer_client extends JFrame {
 						while(true) {
 							in = new DataInputStream(socket.getInputStream());
 							
-							String msg = in.readUTF(); // 아이디 , 이름 
+							String msg = in.readUTF(); // 아이디 
 							int pc = in.readInt(); // pc 번호를 받아
 							System.out.println("client 받은 메세지 : "+msg);
 							System.out.println("client 받은 Pc번호: "+pc);
@@ -63,10 +63,6 @@ public class PcServer_client extends JFrame {
 									gui.insert(msg,pc);  // 서버 gui에서 받아온 아이디 이름 pc 번호로 꾸밈
 								}
 							}
-							
-							//for(PcBangServer_client pc_client : PcBangServer.clients) {
-							//pc_client.send(msg);
-							//}
 						}
 					}catch(IOException e) {
 						try {

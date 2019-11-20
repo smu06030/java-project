@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Calendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,8 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
-public class PcServer_Main extends JFrame implements MouseListener, ActionListener {
+import DBCheck.data_check;
 
+public class PcServer_Main extends JFrame implements MouseListener, ActionListener {
+	private static clock c[] = new clock[10];
+	private static data_check checking = new data_check();
 	private JTextArea txt = new JTextArea(5,8);
 	private String btnName[] = {"당일내역","회원관리","상품관리","지출"};
 	private Container ct;
@@ -32,7 +34,7 @@ public class PcServer_Main extends JFrame implements MouseListener, ActionListen
 	private static JLabel label1 = new JLabel();
 	private JLabel label[] = new JLabel[5];
 	private JButton btn[] = new JButton[4];
-	
+
 	private static int count = 10;
 	private static int cnt = 0;
 	private static int pcbun = 0;
@@ -55,9 +57,8 @@ public class PcServer_Main extends JFrame implements MouseListener, ActionListen
 			btn[i] = new JButton(btnName[i]);
 			btn[i].setFont(new Font("나눔스퀘어",Font.BOLD,30));
 			btn[i].setForeground(Color.white);
-			btn[i].setOpaque(false);
-			btn[i].setBackground(null);
-			btn[i].setBorder(new LineBorder(Color.BLACK,2));
+			btn[i].setBackground(new Color(72,72,72));
+			btn[i].setBorder(new LineBorder(Color.WHITE,2));
 			btn[i].setFocusPainted(false);
 			btn[i].setPreferredSize(new Dimension(200,70));
 			btn[i].addActionListener(this);
@@ -134,7 +135,7 @@ public class PcServer_Main extends JFrame implements MouseListener, ActionListen
 				else
 					label[i] = new JLabel("");
 				
-				label[i].setBounds(90,y,150,150);
+				label[i].setBounds(85,y,150,150);
 				y+= 25;
 				label[i].setForeground(new Color(221,228,236));
 				add(label[i], i);
@@ -149,18 +150,80 @@ public class PcServer_Main extends JFrame implements MouseListener, ActionListen
 		if(msg.equals("종료")){
 			pcFrame[pc-1].getComponent(5).setBackground(new Color(57,56,54));
 			JLabel l1 = (JLabel)pcFrame[pc-1].getComponent(2);
+			JLabel l2 = (JLabel)pcFrame[pc-1].getComponent(3);
+			JLabel l3 = (JLabel)pcFrame[pc-1].getComponent(4);
+			
+			c[pc].interrupt();
+			
 			cnt--;
 			label1.setText("사용 현황 "+cnt+" : "+count);
 			l1.setText("");
+			l2.setText("");
+			l3.setText("");
+		
 		}else {
+			// 받아온 id로 회원DB에 이름 가져오기
+			String name = checking.id_search(msg);
+			int hour = checking.time_hour(msg);
+			int minute = checking.time_minute(msg);
+			int sec = checking.time_sec(msg);
+			
 			pcFrame[pc-1].getComponent(5).setBackground(new Color(23,103,0));
 			JLabel l1 = (JLabel)pcFrame[pc-1].getComponent(2);
 			JLabel l2 = (JLabel)pcFrame[pc-1].getComponent(3);
+			JLabel l3 = (JLabel)pcFrame[pc-1].getComponent(4);
+			
+			c[pc] = new clock(l3,hour,minute,sec);
+			c[pc].start();
+			
 			cnt++;
 			label1.setText("사용 현황 "+cnt+" : "+count);
-			l1.setText(msg);
+			
+			l1.setText("ID : "+msg);
+			l2.setText("이름 : "+name);
+	
 		}
 	}
+	// 시계
+	static class clock extends Thread{
+		
+		JLabel cl;
+		int hour,minute,sec;
+		clock(JLabel cl,int hour, int minute, int sec){
+			this.cl = cl;
+			this.hour = hour;
+			this.minute = minute;
+			this.sec = sec;
+		}
+		
+		public void run() {
+			while(true) {
+				cl.setText("잔여시간 : "+(Integer.toString(hour))+"시간"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초");		
+				// 선불 요금제 일 때
+				if(hour == 0 && minute == 0 && sec == 0) {
+					break;
+				}
+			
+				if(hour >= 1 && minute == 0 && sec == 0) {
+					minute = 60;
+					hour--;	
+				}
+				
+				if(minute >= 1 && sec == 0) {
+					sec = 59;
+					minute--;
+				}
+				sec--;
+				try {
+					Thread.sleep(1000);
+				}catch(InterruptedException e) {
+					cl.setText("");
+					break;
+				}
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		PcServer_Main pc = new PcServer_Main();
 		pc.setVisible(true);
@@ -171,60 +234,5 @@ public class PcServer_Main extends JFrame implements MouseListener, ActionListen
 		
 		PcServer pcServer = new PcServer();
 		pcServer.startServer();
-	}
-}
-// 시계
-class clock extends Thread{
-	
-	JLabel cl;
-	clock(JLabel cl){
-		this.cl = cl;
-	}
-	
-	public void run() {
-		Calendar time = Calendar.getInstance();
-		int hour = 0,minute = 1,sec = 3;
-		int coin = 0;
-		while(true) {
-			
-			cl.setText("<html>이용시간 : "+(Integer.toString(hour))+"시"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초<br>이용요금 : "+coin+"원</html>");
-			
-			// 후불 요금제 일 때
-//			sec++;
-//			
-//			if(sec%10 == 0) {
-//				coin += 100;
-//			}
-//			if(sec == 60) {
-//				sec = 0;
-//				minute++;
-//			}
-//			if(minute == 60) {
-//				minute = 0;
-//				hour++;
-//			}
-			
-			// 선불 요금제 일 때
-			if(hour == 0 && minute == 0 && sec == 0) {
-				break;
-			}
-			sec--;
-			
-			if(hour >= 1 && minute == 0 && sec == 0) {
-				minute = 60;
-				hour--;	
-			}
-			
-			if(minute >= 1 && sec == 0) {
-				sec = 59;
-				minute--;
-			}
-			
-			try {
-				Thread.sleep(1000);
-			}catch(InterruptedException e) {
-				
-			}
-		}
 	}
 }

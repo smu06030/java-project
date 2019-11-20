@@ -136,11 +136,10 @@ public class userMain extends JFrame implements ActionListener {
 			client.send("종료",pcNumber);
 			
 			System.out.println("남은 시간 "+hour+" 남은 분 "+minute+" 남은 초 "+sec+" id "+id);
-			try {
-				checking.timeInsert(hour,minute,sec,id);
-			} catch (SQLException e1) {
-				System.out.println(e1.getMessage());
-			}
+			
+			// 남은 시간을 회원DB에 저장한다.
+			checking.timeInsert(hour,minute,sec,id);
+			
 			this.dispose();
 		}else if(e.getActionCommand().equals("먹거리 주문")) {
 			
@@ -156,7 +155,6 @@ public class userMain extends JFrame implements ActionListener {
 			this.cl = cl;
 		}
 		public void run() {
-			//Calendar time = Calendar.getInstance();
 			while(true) {
 				cl.setText((Integer.toString(hour))+"시간"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초");
 
@@ -164,7 +162,6 @@ public class userMain extends JFrame implements ActionListener {
 				if(hour == 0 && minute == 0 && sec == 0) {
 					break;
 				}
-				sec--;
 				
 				if(hour >= 1 && minute == 0 && sec == 0) {
 					minute = 60;
@@ -175,11 +172,12 @@ public class userMain extends JFrame implements ActionListener {
 					sec = 59;
 					minute--;
 				}
-				
+				sec--;
+	
 				try {
 					Thread.sleep(1000);
 				}catch(InterruptedException e) {
-					
+				
 				}
 			}
 		}

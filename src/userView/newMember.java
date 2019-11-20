@@ -4,17 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class newMember extends JFrame {
+import DBCheck.data_check;
+
+public class newMember extends JFrame implements ActionListener {
+	private data_check checking = new data_check();
 	private String phones[] = {"010","011","017","019"};
 	private String emails[] = {"naver.com","google.com","nate.com","daum.net","hanmail.com"};
 	private Vector<String> year = new Vector<String>();
@@ -68,7 +74,7 @@ public class newMember extends JFrame {
 		check = new JButton("중복 확인");
 		check.setFont(new Font("나눔고딕",Font.BOLD,15));
 		check.setBounds(350,25,100,40);
-		check.setBackground(new Color(212,84,169));
+		check.setBackground(new Color(86,42,57));
 		check.setFocusPainted(false);
 		check.setBorder(null);
 		check.setForeground(Color.WHITE);
@@ -180,6 +186,7 @@ public class newMember extends JFrame {
 		join.setForeground(Color.WHITE);
 		join.setBorder(null);
 		join.setFocusPainted(false);
+		join.setEnabled(false);
 		top.add(join);
 		// 닫기 버튼
 		close = new JButton("닫기");
@@ -193,6 +200,45 @@ public class newMember extends JFrame {
 		
 		top.add(bg);
 		ct.add(top,BorderLayout.CENTER);
+		
+		check.addActionListener(this);
+		join.addActionListener(this);
+		close.addActionListener(this);
+	}
+	
+	// 닫기,가입, 중복확인 버튼을 클릭했을 때 이벤트
+	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("중복 확인")) {
+			if(checking.id_check(id_field.getText())) {
+				JOptionPane.showMessageDialog(null, "사용가능한 ID 입니다.");
+				join.setEnabled(true);
+				id_field.setEditable(false);
+			}else {
+				JOptionPane.showMessageDialog(null, "중복된 ID 입니다.");
+			}
+		}else if(e.getActionCommand().equals("가입")) {
+			if(id_field.getText().equals("") || new String(p_field.getPassword()).equals("") || new String(pCheck_field.getPassword()).equals("")
+			 ||name_field.getText().equals("") || phone_field.getText().equals("") || email_field.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "빈칸이 있습니다.");
+			}else {
+				String pass = new String(p_field.getPassword());
+				String passCheck = new String(pCheck_field.getPassword());
+				if(!pass.equals(passCheck)) {
+					JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다.");
+				}else {
+					// 생년월일, 휴대폰, 이메일을 변수를 설정하고 회원DB에 보낸다.
+					String birth = (String)year_box.getSelectedItem()+"-"+(String)month_box.getSelectedItem()+"-"+(String)day_box.getSelectedItem();
+					String phone = (String)phone_box.getSelectedItem()+phone_field.getText();
+					String email = email_field.getText()+"@"+(String)email_box.getSelectedItem();
+					
+					checking.member_join(id_field.getText(),new String(p_field.getPassword()),name_field.getText(),birth,0,0,phone,email,0);
+					JOptionPane.showMessageDialog(null, "회원가입이 되었습니다.");
+					this.dispose();
+				}
+			}
+		}else if(e.getActionCommand().equals("닫기")) {
+			this.dispose();
+		}
 	}
 	
 	public static void main(String[] args) {

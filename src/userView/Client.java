@@ -26,7 +26,6 @@ public class Client {
 	private String ids;
 	
 	private PcServer_Main pcTest;
-	private data_check checking;
 	
 	Client(){
 		
@@ -40,21 +39,13 @@ public class Client {
 					
 					// 받아온 아이디의 정보를 클라이언트가 저장한다.
 					ids = id;
-					// data_check 객체 생성
-					checking = new data_check();
-					
-					try {// 받아온 id로 회원DB에 이름 가져오기
-						name = checking.id_search(id);
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-					
+						
 					in = new DataInputStream(socket.getInputStream());
 					out = new DataOutputStream(socket.getOutputStream());
 					// 받아온 pc 번호를 현재 클라이언트에 저장한다.
 					pcNumber = rand;
 					
-					out.writeUTF("<html>id : "+id+"<br>이름 : "+name+"</html>");
+					out.writeUTF(id);
 					out.writeInt(rand);
 					receive();
 				} catch (IOException e) {

@@ -138,9 +138,10 @@ public class login extends JFrame implements ActionListener{
 		login.addActionListener(this);
 		newMember.addActionListener(this);
 		search.addActionListener(this);
+		password.addActionListener(this);
 	}
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("로그인")) {
+		if(e.getActionCommand().equals("로그인") || e.getSource() == password) {
 			String ids = id.getText();
 			String passwd = new String(password.getPassword());
 			// DBCheck 객체 생성
@@ -176,11 +177,14 @@ public class login extends JFrame implements ActionListener{
 				}
 			} catch (HeadlessException e1) {
 				e1.printStackTrace();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
 			}
 		}else if(e.getActionCommand().equals("회원가입")) {
-			
+			newMember member = new newMember();
+			member.setVisible(true);
+			member.setTitle("회원가입");
+			member.setSize(500,550);
+			member.setLocationRelativeTo(null);
+			member.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 		}else if(e.getActionCommand().equals("ID/PW찾기")) {
 			
