@@ -24,7 +24,11 @@ public class PcServer_client extends JFrame {
 		receive();
 	}
 	
+	/*---------------------------- pc번호 Vector ------------------------------*/
+	
 	public static ArrayList<Integer> random = new ArrayList<Integer>(10);
+	
+	/*---------------------------- 클라이언트로부터 메세지를 받는 곳 ------------------------------*/
 	
 	public void receive() {
 		Thread thread = new Thread() {
@@ -77,6 +81,8 @@ public class PcServer_client extends JFrame {
 		thread.start();
 	}
 	
+	/*---------------------------- 클라이언트로 메세지를 보내는 곳 ------------------------------*/
+	
 	public void send(String msg, int intmsg) {
 		Thread thread = new Thread() {
 			public void run() {
@@ -98,8 +104,5 @@ public class PcServer_client extends JFrame {
 			}
 		};
 		thread.start();	
-	}
-	public static void main(String[] args) {
-		
 	}
 }

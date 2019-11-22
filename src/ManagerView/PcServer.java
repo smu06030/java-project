@@ -21,6 +21,8 @@ public class PcServer {
 	private ServerSocket serversocket;
 	private Socket socket;
 
+	/*---------------------------- 서버 시작 ------------------------------*/
+	
 	public void startServer() {
 		try {
 			serversocket = new ServerSocket();
@@ -56,6 +58,8 @@ public class PcServer {
 		thread.start();
 	}
 	
+	/*---------------------------- 서버 종료 ------------------------------*/
+	
 	public void stopServer() {
 		try {
 			Iterator<PcServer_client> iterator = clients.iterator();
@@ -72,10 +76,6 @@ public class PcServer {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void main(String[] args) {
-			
 	}
 }
 

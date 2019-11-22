@@ -28,6 +28,8 @@ import javax.swing.border.LineBorder;
 
 import DBCheck.data_check;
 
+/*---------------------------- 이미지 출력 ------------------------------*/
+
 class ImagePanel extends JPanel{
 	Image img;
 	
@@ -55,6 +57,8 @@ public class login extends JFrame implements ActionListener{
 		ct = getContentPane();
 		ct.setLayout(new BorderLayout());
 		
+		/*---------------------------- 로그인 화면 이미지 ------------------------------*/
+		
 		// 이미지 1600x700 사이즈로 상단에 배치
 		ImagePanel imgPanel = new ImagePanel(new ImageIcon("./image/loginLogo.jpg").getImage());
 		imgPanel.setLayout(null);
@@ -65,6 +69,8 @@ public class login extends JFrame implements ActionListener{
 		logPanel.setLayout(null);
 		logPanel.setBackground(new Color(22,28,24));//new Color(54,53,108)
 		logPanel.setPreferredSize(new Dimension(1600,200));
+		
+		/*---------------------------- 로그인 입력  ------------------------------*/
 		
 		// 로그인 라벨 
 		JLabel idLabel = new JLabel("아이디");
@@ -134,6 +140,8 @@ public class login extends JFrame implements ActionListener{
 		ct.add(imgPanel,BorderLayout.NORTH);
 		ct.add(logPanel,BorderLayout.SOUTH);
 		
+		/*------------------------------ 이벤트 --------------------------------*/
+		
 		// 클릭 이벤트 처리
 		login.addActionListener(this);
 		newMember.addActionListener(this);
@@ -190,6 +198,9 @@ public class login extends JFrame implements ActionListener{
 			
 		}
 	}
+	
+	/*---------------------------- 메인 ------------------------------*/
+	
 	public static void main(String[] args) {
 		login log = new login();
 		
@@ -206,6 +217,5 @@ public class login extends JFrame implements ActionListener{
 		}catch(ClassNotFoundException e) {
 			System.out.println("JDBC 드라이버 로드 에러");
 		}
-		
 	}	
 }

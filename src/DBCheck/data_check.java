@@ -11,6 +11,8 @@ public class data_check {
 	private static Connection conn;
 	private static PreparedStatement pstmt;
 	
+	/*---------------------------- DB------------------------------*/
+	
 	// 회원DB에서 아이디와 비밀번호가 있는지 확인하는 메소드
 	public boolean check(String id, String password){
 		try {
@@ -29,7 +31,7 @@ public class data_check {
 			
 			pstmt.close();
 			conn.close();
-			
+			rs.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -55,6 +57,8 @@ public class data_check {
 			}
 			pstmt.close();
 			conn.close();
+			rs.close();
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -80,6 +84,8 @@ public class data_check {
 
 			pstmt.close();
 			conn.close();
+			rs.close();
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -105,6 +111,7 @@ public class data_check {
 			
 			pstmt.close();
 			conn.close();
+			rs.close();
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -125,13 +132,13 @@ public class data_check {
 			pstmt.setString(1,id);
 			ResultSet rs = pstmt.executeQuery();
 			
-			
 			while(rs.next()) {
 				sec = rs.getInt("회원초");
 			}
 		
 			pstmt.close();
 			conn.close();
+			rs.close();
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -181,12 +188,17 @@ public class data_check {
 				return false;
 			}
 			
+			pstmt.close();
+			conn.close();
+			rs.close();
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 		
 		return true;
 	}
+	// 회원정보를 회원 DB에 저장
 	public void member_join(String id, String pass, String name, String birth, int hour, int minute, String phone, String email, int sec) {
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pcbang?serverTimezone=UTC","root","dlscjf158!A");
@@ -217,5 +229,6 @@ public class data_check {
 			System.out.println(e.getMessage());
 		}
 	}
+
 	
 }

@@ -30,6 +30,9 @@ public class Client {
 	Client(){
 		
 	}
+	
+	/*---------------------------- 클라이언트 시작 ------------------------------*/
+	
 	public void startClient(String ip, int port,int rand, String id) {
 		Thread thread = new Thread() {
 			public void run() {
@@ -55,6 +58,9 @@ public class Client {
 		};
 		thread.start();
 	}
+	
+	/*------------------------------ 클라이언트 종료 --------------------------------*/
+	
 	public void stopClient() {
 		try {
 			if(socket != null && !socket.isClosed()) {
@@ -64,6 +70,8 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	
+	/*---------------------------- 서버로 메세지를 전송하는 곳 ------------------------------*/
 	
 	public void receive() {
 		Thread thread = new Thread() {
@@ -90,6 +98,8 @@ public class Client {
 		thread.start();
 	}
 	
+	/*---------------------------- 서버에서 메세지를 받는 곳 ------------------------------*/
+	
 	public void send(String msg, int intmsg) {
 		try {
 			out = new DataOutputStream(socket.getOutputStream());
@@ -101,6 +111,8 @@ public class Client {
 		}
 	}
 
+	/*------------------------------- 메인 ---------------------------------*/
+	
 	public static void main(String[] args) {
 		Client pc = new Client();
 	}
