@@ -258,30 +258,31 @@ public class PcServer_Main extends JFrame implements ActionListener {
 		}
 		
 		public void run() {
-			while(!Thread.currentThread().isInterrupted()){
-				cl.setText("잔여시간 : "+(Integer.toString(hour))+"시간"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초");		
-				// 선불 요금제 일 때
-				if(hour == 0 && minute == 0 && sec == 0) {
-					break;
-				}
-			
-				if(hour >= 1 && minute == 0 && sec == 0) {
-					minute = 60;
-					hour--;	
-				}
+			try {
+				while(!Thread.currentThread().isInterrupted()){
+					cl.setText("잔여시간 : "+(Integer.toString(hour))+"시간"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초");		
+					// 선불 요금제 일 때
+					if(hour == 0 && minute == 0 && sec == 0) {
+						break;
+					}
 				
-				if(minute >= 1 && sec == 0) {
-					sec = 59;
-					minute--;
-				}
-				sec--;
-				try {
+					if(hour >= 1 && minute == 0 && sec == 0) {
+						minute = 60;
+						hour--;	
+					}
+					
+					if(minute >= 1 && sec == 0) {
+						sec = 59;
+						minute--;
+					}
+					sec--;
+					
 					Thread.sleep(1000);
-				}catch(InterruptedException e) {
-					cl.setText("");
-					break;
 				}
+			}catch(InterruptedException e) {
+				cl.setText("");
 			}
+			
 		}
 	}
 	

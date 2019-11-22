@@ -19,7 +19,7 @@ public class userMain extends JFrame implements ActionListener {
 	// Client 객체 생성
 	private Client client = new Client();
 	// DB 사용
-	private data_check checking;
+	private data_check checking = new data_check();
 	private clock c;
 	
 	private String ip,id = null;
@@ -143,11 +143,9 @@ public class userMain extends JFrame implements ActionListener {
 		food.addActionListener(this);
 		member_info.addActionListener(this);
 	}
+	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("사용종료") || (hour == 0 && minute == 0 && sec == 0)) {
-			// db 객체 생성
-			checking = new data_check();
-
+		if(e.getActionCommand().equals("사용종료")) {
 			// 시계 인터럽트
 			c.interrupt();
 			
@@ -160,8 +158,9 @@ public class userMain extends JFrame implements ActionListener {
 			// 남은 시간을 회원DB에 저장한다.
 			checking.timeInsert(hour,minute,sec,id);
 			
-			// 현재 창 종료
-			this.dispose();
+			// 현재 프로그램 종료
+			System.exit(0);
+			
 		}else if(e.getActionCommand().equals("먹거리 주문")) {
 			
 		}else if(e.getActionCommand().equals("회원 정보")) {
@@ -185,6 +184,18 @@ public class userMain extends JFrame implements ActionListener {
 
 					// 선불 요금제 일 때
 					if(hour == 0 && minute == 0 && sec == 0) {
+						// 클라이언트에게 종료 메세지 전송
+						client.send("종료",pcNumber);
+						
+						// 남은 시간 출력
+						System.out.println("남은 시간 "+hour+" 남은 분 "+minute+" 남은 초 "+sec+" id "+id);
+						
+						// 남은 시간을 회원DB에 저장한다.
+						checking.timeInsert(hour,minute,sec,id);
+						
+						// 현재 프로그램 종료
+						System.exit(0);
+						
 						break;
 					}
 					
@@ -198,15 +209,12 @@ public class userMain extends JFrame implements ActionListener {
 						minute--;
 					}
 					sec--;
-		
 					
 					Thread.sleep(1000);
-					
 				}
 			}catch(InterruptedException e) {
-				System.out.println("여기까지 왔다");
+				System.out.println("시계  강제 종료");
 			}
-			
 			System.out.println("시계 스레드 종료");
 		}
 	}

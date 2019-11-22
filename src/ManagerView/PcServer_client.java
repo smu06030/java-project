@@ -26,7 +26,7 @@ public class PcServer_client extends JFrame {
 	
 	/*---------------------------- pc번호 Vector ------------------------------*/
 	
-	public static ArrayList<Integer> random = new ArrayList<Integer>(10);
+	public static Vector<Integer> random = new Vector<Integer>(10);
 	
 	/*---------------------------- 클라이언트로부터 메세지를 받는 곳 ------------------------------*/
 	
@@ -48,7 +48,7 @@ public class PcServer_client extends JFrame {
 									}
 								}
 								System.out.println("지울 PC번호 : "+pc);
-								gui.insert(msg,pc);  // 서버 gui에서 받아온 아이디 이름 pc 번호로 꾸밈
+								gui.insert(msg,pc); // 받아온 아이디, pc번호를 server_main으로 넘긴다.
 							}else {
 								for(int i = 0;i<random.size();i++) {
 									if(random.get(i) == pc) {
@@ -62,9 +62,9 @@ public class PcServer_client extends JFrame {
 								if(randCheck == 0) {
 									random.add(pc);	
 									for(int i = 0;i<random.size();i++)
-										System.out.println("벡터 내용 : "+random.get(i));
+										System.out.println("현재 실행중인 pc 번호 : "+random.get(i));
 			
-									gui.insert(msg,pc);  // 서버 gui에서 받아온 아이디 이름 pc 번호로 꾸밈
+									gui.insert(msg,pc);  // 받아온 아이디, pc번호를 server_main으로 넘긴다.
 								}
 							}
 						}

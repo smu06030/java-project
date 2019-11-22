@@ -8,6 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,10 +32,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-public class Member_management extends JFrame implements ActionListener{
+public class Member_management extends JFrame implements ActionListener, MouseListener{
+	private static String url = "jdbc:mysql://localhost:3306/pcbang?serverTimezone=UTC";
+	private static String user = "root";
+	private static String pw = "dlscjf158!A";
 	private static Connection conn;
 	private static PreparedStatement pstmt;
 	private static ResultSet rs = null;
+	
 	private JPanel top = new JPanel();
 	private JPanel left = new JPanel();
 	private JPanel right = new JPanel();
@@ -56,33 +62,13 @@ public class Member_management extends JFrame implements ActionListener{
 		top.setBackground(new Color(22,28,24)); //new Color(22,28,24)
 		top.setLayout(new FlowLayout());
 		top.setPreferredSize(new Dimension(1000,80));
-		top.setBorder(BorderFactory.createEmptyBorder(15,0,0,0));
+		top.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
 		
-		JButton insert = new JButton("등록");
-		insert.setFont(new Font("나눔스퀘어",Font.BOLD,20));
-		insert.setFocusPainted(false);
-		insert.setBackground(new Color(86,42,57));
-		insert.setForeground(Color.WHITE);
-		insert.setPreferredSize(new Dimension(100,40));
-		insert.setBorder(new LineBorder(Color.WHITE,2));
-		JButton update = new JButton("수정");
-		update.setFont(new Font("나눔스퀘어",Font.BOLD,20));
-		update.setFocusPainted(false);
-		update.setBackground(new Color(86,42,57));
-		update.setForeground(Color.WHITE);
-		update.setPreferredSize(new Dimension(100,40));
-		update.setBorder(new LineBorder(Color.WHITE,2));
-		JButton delete = new JButton("삭제");
-		delete.setFont(new Font("나눔스퀘어",Font.BOLD,20));
-		delete.setFocusPainted(false);
-		delete.setBackground(new Color(86,42,57));
-		delete.setForeground(Color.WHITE);
-		delete.setPreferredSize(new Dimension(100,40));
-		delete.setBorder(new LineBorder(Color.WHITE,2));
+		JLabel label = new JLabel("< 회원정보 >");
+		label.setFont(new Font("나눔스퀘어",Font.BOLD,30));
+		label.setForeground(Color.WHITE);
 		
-		top.add(insert);
-		top.add(update);
-		top.add(delete);
+		top.add(label);
 		
 		/*---------------------------- 왼쪽 검색 기능------------------------------*/
 		
@@ -157,7 +143,11 @@ public class Member_management extends JFrame implements ActionListener{
 		for(int i = 0;i<member.length;i++)
 			title.add(member[i]);
 		
-		model = new DefaultTableModel(content,title);
+		model = new DefaultTableModel(content,title) {
+			public boolean isCellEditable(int row, int column) {  // 테이블 수정, 입력 불가
+				return false;
+			}	
+		};
 		// defaultTableCellRenderer 객체 생성
 		DefaultTableCellRenderer dr = new DefaultTableCellRenderer();
 		// 랜더러의 가로 정렬을 center로 지정
@@ -169,6 +159,7 @@ public class Member_management extends JFrame implements ActionListener{
 		for(int i = 0; i<table.getColumnCount();i++)
 			tm.getColumn(i).setCellRenderer(dr);
 		table.getTableHeader().setFont(new Font("나눔고딕",Font.BOLD,15));
+		table.getTableHeader().setBackground(Color.LIGHT_GRAY);
 		table.setFont(new Font("나눔고딕",Font.BOLD,14));
 		table.getColumn("아이디").setPreferredWidth(20);
 		table.getColumn("비밀번호").setPreferredWidth(20);
@@ -195,6 +186,7 @@ public class Member_management extends JFrame implements ActionListener{
 		id_search.addActionListener(this);
 		id_field.addActionListener(this);
 		all_search.addActionListener(this);
+		table.addMouseListener(this);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -219,6 +211,43 @@ public class Member_management extends JFrame implements ActionListener{
 		}
 	}
 	
+
+	public void mouseClicked(MouseEvent e) {
+		if(e.getClickCount() == 2) {
+			int row = table.getSelectedRow(); // 현재 선택된 행
+			String id = (String)table.getValueAt(row, 0); // 아이디
+			String pass = (String)table.getValueAt(row, 1); // 비밀번호
+			String name = (String)table.getValueAt(row, 2); // 이름
+			
+			String birth = (String)table.getValueAt(row, 3); // 생년월일
+			String year = birth.substring(0,4); // 생년월일을 년도, 월, 일 별로 분류
+			String month = birth.substring(5,7);
+			int month_int = Integer.parseInt(month); // 숫자로 변환
+			String day = birth.substring(8,10);
+			int day_int = Integer.parseInt(day); // 숫자로 변환
+			
+			String phone = (String)table.getValueAt(row, 4); // 휴대폰
+			String first_p = phone.substring(0,3); // 휴대폰 번호를 앞에번호 뒤에번호로 분류
+			String last_p = phone.substring(3,11);
+			
+			String email = (String)table.getValueAt(row, 5); // 이메일
+			String first_e[] = email.split("@"); // 이메일을 @로 구분하여 분류
+
+			Member_UpAndDel member = new Member_UpAndDel(id,pass,name,year,month_int,day_int,first_p,last_p,first_e[0],first_e[1]);
+			member.setVisible(true);
+			member.setTitle("회원정보");
+			member.setSize(500,550);
+			member.setLocationRelativeTo(null);
+			member.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
+		
+	}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+	
+	
 	/*------------------------------- 메인 ---------------------------------*/
 	
 	public static void main(String[] args) {
@@ -227,7 +256,7 @@ public class Member_management extends JFrame implements ActionListener{
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("드라이버 연결 성공");	
 			
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pcbang?serverTimezone=UTC","root","dlscjf158!A");
+			conn = DriverManager.getConnection(url,user,pw);
 					
 		}catch(ClassNotFoundException e) {
 			System.out.println("JDBC 드라이버 로드 에러");
@@ -250,13 +279,13 @@ public class Member_management extends JFrame implements ActionListener{
 	// 이름으로 회원 조회
 	public void name_sh(String name) {
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pcbang?serverTimezone=UTC","root","dlscjf158!A");
+			conn = DriverManager.getConnection(url,user,pw);
 			
 			String sql = "select * from 회원  where 이름 like ?";
 			
 			pstmt = conn.prepareStatement(sql); 
 			
-			pstmt.setString(1,"%"+name+"%");
+			pstmt.setString(1,name);
 			
 			rs = pstmt.executeQuery();
 			// 받아온 정보를 input에다가 저장한다.
@@ -285,13 +314,13 @@ public class Member_management extends JFrame implements ActionListener{
 	// 아이디로 회원 조회
 	public void id_sh(String id) {
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pcbang?serverTimezone=UTC","root","dlscjf158!A");
+			conn = DriverManager.getConnection(url,user,pw);
 			
 			String sql = "select * from 회원  where 아이디 like ?";
 			
 			pstmt = conn.prepareStatement(sql); 
 			
-			pstmt.setString(1,"%"+id+"%");
+			pstmt.setString(1,id);
 			
 			rs = pstmt.executeQuery();
 			// 받아온 정보를 input에다가 저장한다.
@@ -321,7 +350,7 @@ public class Member_management extends JFrame implements ActionListener{
 	// 모든 회원 조회
 	public void all_sh() {
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pcbang?serverTimezone=UTC","root","dlscjf158!A");
+			conn = DriverManager.getConnection(url,user,pw);
 			
 			String sql = "select * from 회원";
 			
@@ -350,5 +379,4 @@ public class Member_management extends JFrame implements ActionListener{
 			System.out.println(e.getMessage());
 		}
 	}
-	
 }

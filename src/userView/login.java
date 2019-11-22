@@ -28,6 +28,8 @@ import javax.swing.border.LineBorder;
 
 import DBCheck.data_check;
 
+// 지금 로그인 했을 때 같은 아이디 사용자가 사용중이면 이 아이디는 사용중 입니다 라고 띄우기 - 실패
+// 그리고 실행중인 pc가 10대 이상 넘어갔을 때 모든 pc가 사용중 입니다 라고 출력 - 
 /*---------------------------- 이미지 출력 ------------------------------*/
 
 class ImagePanel extends JPanel{
@@ -163,7 +165,7 @@ public class login extends JFrame implements ActionListener{
 					int sec = checking.time_sec(ids);
 					
 					// 회원의 시간이 있는 경우 로그인을 한다.
-					if((hour != 0 || minute != 0 || sec != 0)) {
+					if((hour != 0 || minute != 0 || sec != 0)) { //여기에서 사용중인지 검사.
 						JOptionPane.showMessageDialog(null,"로그인 성공했습니다.");
 						// 로그인에 성공하면 서버에 접속하기 위해 ip주소와 port번호와 랜덤으로 pc번호를 보낸다.
 						String ip = "127.0.0.1";

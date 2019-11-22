@@ -86,7 +86,7 @@ public class Client {
 							intmsg = (int)(Math.random()*10)+1;
 							pcNumber = intmsg;
 							System.out.println("client pc에 저장된 번호 : "+pcNumber);
-							send("<html>id : "+ids+"<br>이름 : "+name+"</html>",pcNumber);
+							send(ids,pcNumber);
 						}
 											
 					}catch(Exception e) {
@@ -109,11 +109,5 @@ public class Client {
 		}catch(Exception e) {
 			stopClient();
 		}
-	}
-
-	/*------------------------------- 메인 ---------------------------------*/
-	
-	public static void main(String[] args) {
-		Client pc = new Client();
 	}
 }
