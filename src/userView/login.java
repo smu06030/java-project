@@ -110,13 +110,11 @@ public class login extends JFrame implements ActionListener{
 		logPanel.add(password);
 		
 		// 로그인 버튼
-		login = new JButton("로그인");
+		login = new JButton(new ImageIcon("image/loginButton.jpg"));
 		login.setBounds(833,67,160,103);
-		login.setFont(new Font("나눔고딕",Font.BOLD,26));
-		login.setForeground(Color.WHITE);
-		login.setBackground(new Color(135,189,255));
 		login.setBorder(new LineBorder(Color.WHITE,2));
 		login.setFocusPainted(false);
+		login.setContentAreaFilled(false);
 		logPanel.add(login);
 
 		// 회원가입 버튼
@@ -151,7 +149,7 @@ public class login extends JFrame implements ActionListener{
 		password.addActionListener(this);
 	}
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("로그인") || e.getSource() == password) {
+		if(e.getSource() == login || e.getSource() == password) {
 			String ids = id.getText();
 			String passwd = new String(password.getPassword());
 			// DBCheck 객체 생성
