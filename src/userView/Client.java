@@ -5,13 +5,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.sql.SQLException;
-
-import javax.swing.JButton;
-import javax.swing.JTextField;
 
 import DBCheck.data_check;
-import ManagerView.PcServer_Main;
 
 public class Client {
 
@@ -24,8 +19,9 @@ public class Client {
 	int pcNumber = 0;
 	private String name;
 	private String ids;
-	
-	private PcServer_Main pcTest;
+	 
+	data_check checking = new data_check();
+	int random = checking.getSeatNum();
 	
 	Client(){
 		
@@ -33,7 +29,7 @@ public class Client {
 	
 	/*---------------------------- 클라이언트 시작 ------------------------------*/
 	
-	public void startClient(String ip, int port,int rand, String id) {
+	public void startClient(String ip, int port, String id) {
 		Thread thread = new Thread() {
 			public void run() {
 				try {
@@ -46,6 +42,7 @@ public class Client {
 					in = new DataInputStream(socket.getInputStream());
 					out = new DataOutputStream(socket.getOutputStream());
 					// 받아온 pc 번호를 현재 클라이언트에 저장한다.
+					int rand = (int)(Math.random()*random)+1;
 					pcNumber = rand;
 					
 					out.writeUTF(id);
@@ -83,7 +80,7 @@ public class Client {
 						int intmsg = in.readInt();
 						
 						if(msg.equals("랜덤재요청")) {
-							intmsg = (int)(Math.random()*10)+1;
+							intmsg = (int)(Math.random()*random)+1;
 							pcNumber = intmsg;
 							System.out.println("client pc에 저장된 번호 : "+pcNumber);
 							send(ids,pcNumber);

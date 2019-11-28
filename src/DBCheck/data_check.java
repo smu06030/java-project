@@ -281,4 +281,103 @@ public class data_check {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	// 지점명을 가져온다.
+	public String Store_name() {
+		try {
+			conn = DriverManager.getConnection(url,user,pw);
+			
+			String sql = "select 지점명 from 매장 where 사업자번호 = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, "1234-5678");
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				return rs.getString("지점명");
+			}
+			
+			pstmt.close();
+			conn.close();
+			rs.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return "";
+	}
+	// 사업자번호를 가져온다.
+	public String Store_num() {
+		try {
+			conn = DriverManager.getConnection(url,user,pw);
+			
+			String sql = "select 사업자번호 from 매장 where 지점명 = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, "100억pc방");
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				return rs.getString("사업자번호");
+			}
+			
+			pstmt.close();
+			conn.close();
+			rs.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return "";
+	}
+	// 좌석 수를 변경한다.
+	public void seatNum(int num) {
+		try {
+			conn = DriverManager.getConnection(url,user,pw);
+			
+			String sql = "update 매장 set 좌석수 = ? where 사업자번호 = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, num);
+			pstmt.setString(2, "1234-5678");
+		
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	// 좌석 수를 가져온다.
+	public int getSeatNum() {
+		try {
+			conn = DriverManager.getConnection(url,user,pw);
+			
+			String sql = "select 좌석수 from 매장 where 사업자번호 = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, "1234-5678");
+	
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				return rs.getInt("좌석수");
+			}
+			
+			pstmt.close();
+			conn.close();
+			rs.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return 0;
+	}
 }

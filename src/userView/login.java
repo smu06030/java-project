@@ -168,9 +168,8 @@ public class login extends JFrame implements ActionListener{
 						// 로그인에 성공하면 서버에 접속하기 위해 ip주소와 port번호와 랜덤으로 pc번호를 보낸다.
 						String ip = "127.0.0.1";
 						int port = 9999;
-						int rand = (int)(Math.random()*10)+1;
 					
-						userMain main = new userMain(ip,port,rand,ids,hour,minute,sec);
+						userMain main = new userMain(ip,port,ids,hour,minute,sec);
 						main.setVisible(true);
 						main.setSize(400,400);
 						main.setLocationRelativeTo(null);

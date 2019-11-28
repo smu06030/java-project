@@ -27,18 +27,18 @@ import javax.swing.table.DefaultTableModel;
 import DBCheck.data_check;
 
 public class PcServer_Main extends JFrame implements ActionListener {
-	private static clock c[] = new clock[10];
 	private static data_check checking = new data_check();
+	private static clock c[] = new clock[checking.getSeatNum()];
 	private JTextArea txt = new JTextArea(5,8);
-	private String btnName[] = {"당일내역","회원관리","상품관리","지출"};
+	private String btnName[] = {"당일내역","회원관리","상품관리","지출","매장관리"};
 	private Container ct;
-	private static JPanel pcFrame[] = new pcFrame[10];
+	private static JPanel pcFrame[] = new pcFrame[checking.getSeatNum()];
 	private JPanel top = new JPanel();
 	private JPanel center = new JPanel();
 	private JPanel bottom = new JPanel();
 	private static JLabel label1 = new JLabel();
 	private JLabel label[] = new JLabel[5];
-	private JButton btn[] = new JButton[4];
+	private JButton btn[] = new JButton[5];
 	private JTabbedPane tabbed_log = new JTabbedPane();
 	private JTabbedPane tabbed_memo = new JTabbedPane();
 	private String column[] = {"날짜","주문번호","상품명","아이디","수량","가격","피씨번호"};
@@ -48,7 +48,7 @@ public class PcServer_Main extends JFrame implements ActionListener {
 	private JTable table;
 	private JScrollPane scroll;
 	
-	private static int count = 10;
+	private static int count = checking.getSeatNum();
 	private static int cnt = 0;
 	private static int pcbun = 0;
 	private int x = 200, y = 100;
@@ -83,10 +83,11 @@ public class PcServer_Main extends JFrame implements ActionListener {
 		/*---------------------------- pc자리 ------------------------------*/
 		
 		// pc자리 세팅
-		center.setLayout(new GridLayout(2,5,0,0));
+		center.setLayout(new GridLayout(0,5,0,0));
+		center.setBackground(new Color(22,28,24));
 		center.setBorder(null);
 
-		for(seat = 0; seat < 10;seat++) {
+		for(seat = 0; seat < checking.getSeatNum();seat++) {
 			pcFrame[seat] = new pcFrame(seat);
 			pcFrame[seat].setBackground(new Color(22,28,24));
 			center.add(pcFrame[seat]);
@@ -163,6 +164,13 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			
 		}else if(e.getActionCommand().equals("지출")) {
 			
+		}else if(e.getActionCommand().equals("매장관리")) {
+			Store_Management sm = new Store_Management();
+			sm.setVisible(true);
+			sm.setSize(350,300);
+			sm.setTitle("매장관리");
+			sm.setLocationRelativeTo(null);
+			sm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		}	
 	}
 	
@@ -182,17 +190,23 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			textarea.setBackground(new Color(57,56,54));
 			textarea.setBorder(new LineBorder(Color.BLACK,2));
 			
-			int y = -10;
+			int y = 20;//52
 			
 			for(int i = 0;i<5;i++) {
-				if(i == 0)
+				if(i == 0) {
 					label[i] = new JLabel("PC "+(numSeat+1)+"번");
-				else
+					label[i].setBounds(85,y,143,40);// 82,y,146,20
+					y+= 20;
+					label[i].setForeground(new Color(221,228,236));
+				}
+				else {
 					label[i] = new JLabel("");
+					label[i].setBounds(85,y,143,20);// 82,y,146,20
+					y+= 20;
+					label[i].setForeground(new Color(221,228,236));
+				}
+				//label[i].setOpaque(true);
 				
-				label[i].setBounds(85,y,150,150);
-				y+= 25;
-				label[i].setForeground(new Color(221,228,236));
 				add(label[i], i);
 			}
 			
@@ -207,18 +221,17 @@ public class PcServer_Main extends JFrame implements ActionListener {
 
 		if(msg.equals("종료")){
 			pcFrame[pc-1].getComponent(5).setBackground(new Color(57,56,54));
-			JLabel l1 = (JLabel)pcFrame[pc-1].getComponent(2);
-			JLabel l2 = (JLabel)pcFrame[pc-1].getComponent(3);
-			JLabel l3 = (JLabel)pcFrame[pc-1].getComponent(4);
 			
-			c[pc].interrupt();
+			JLabel l2 = (JLabel)pcFrame[pc-1].getComponent(2);
+			JLabel l3 = (JLabel)pcFrame[pc-1].getComponent(3);
+			JLabel l4 = (JLabel)pcFrame[pc-1].getComponent(4);
+			
+			c[pc-1].interrupt();
 			
 			cnt--;
 			label1.setText("사용 현황 "+cnt+" : "+count);
-			l1.setText("");
-			l2.setText("");
-			l3.setText("");
-		
+			
+			l2.setText("");l3.setText("");l4.setText("");
 		}else {
 			// 받아온 id로 회원DB에 이름 가져오기
 			String name = checking.id_search(msg);
@@ -227,19 +240,19 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			int sec = checking.time_sec(msg);
 			
 			pcFrame[pc-1].getComponent(5).setBackground(new Color(23,103,0));
-			JLabel l1 = (JLabel)pcFrame[pc-1].getComponent(2);
-			JLabel l2 = (JLabel)pcFrame[pc-1].getComponent(3);
-			JLabel l3 = (JLabel)pcFrame[pc-1].getComponent(4);
+	
+			JLabel l2 = (JLabel)pcFrame[pc-1].getComponent(2);
+			JLabel l3 = (JLabel)pcFrame[pc-1].getComponent(3);
+			JLabel l4 = (JLabel)pcFrame[pc-1].getComponent(4);
 			
-			c[pc] = new clock(l3,hour,minute,sec);
-			c[pc].start();
+			c[pc-1] = new clock(l4,hour,minute,sec);
+			c[pc-1].start();
 			
 			cnt++;
 			label1.setText("사용 현황 "+cnt+" : "+count);
-			
-			l1.setText("ID : "+msg);
-			l2.setText("이름 : "+name);
-	
+		
+			l2.setText("ID : "+msg);
+			l3.setText("이름 : "+name);
 		}
 	}
 	
@@ -280,7 +293,7 @@ public class PcServer_Main extends JFrame implements ActionListener {
 					Thread.sleep(1000);
 				}
 			}catch(InterruptedException e) {
-				cl.setText("");
+//				cl.setText("");
 			}
 			
 		}

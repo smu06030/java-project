@@ -237,6 +237,7 @@ public class Member_management extends JFrame implements ActionListener, MouseLi
 			member.setVisible(true);
 			member.setTitle("회원정보");
 			member.setSize(500,550);
+			member.setResizable(false);
 			member.setLocationRelativeTo(null);
 			member.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		}

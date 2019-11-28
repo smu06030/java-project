@@ -23,25 +23,24 @@ public class userMain extends JFrame implements ActionListener {
 	private clock c;
 	
 	private String ip,id = null;
-	private int port,rand,pcNumber,hour = 0,minute = 0,sec = 0;
+	private int port,pcNumber,hour = 0,minute = 0,sec = 15;
 	private String pcNum;
 	
 	private Container ct;
 	private JLabel pclabel,idLabel,idview,hourLabel,hourview;
 	private JButton close,food,member_info;
 	
-	userMain(String ip, int port,int rand, String id,int hour, int minute, int sec){
+	userMain(String ip, int port, String id,int hour, int minute, int sec){
 		this.ip = ip;
 		this.port = port;
-		this.rand = rand;
 		this.id = id;
 		this.hour = hour;
 		this.minute = minute;
 		this.sec = sec;
 		
 		/*---------------------------- 클라이언트 접속 ------------------------------*/
-		
-		client.startClient(ip,port,rand,id);
+	
+		client.startClient(ip,port,id);
 		// 서버에 접속하는데 시간이 조금 걸리기 때문에 스레드 sleep으로 잠시 지연 시켰다가 실행한다.
 		try {
 			Thread.sleep(1000);
@@ -164,7 +163,7 @@ public class userMain extends JFrame implements ActionListener {
 		}else if(e.getActionCommand().equals("먹거리 주문")) {
 			
 		}else if(e.getActionCommand().equals("회원 정보")) {
-			
+			// 아이디를 넘겨준다. 
 		}
 	}
 	

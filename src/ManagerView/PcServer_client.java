@@ -26,7 +26,7 @@ public class PcServer_client extends JFrame {
 	
 	/*---------------------------- pc번호 Vector ------------------------------*/
 	
-	public static Vector<Integer> random = new Vector<Integer>(10);
+	public static Vector<Integer> random = new Vector<Integer>();
 	
 	/*---------------------------- 클라이언트로부터 메세지를 받는 곳 ------------------------------*/
 	
@@ -63,7 +63,7 @@ public class PcServer_client extends JFrame {
 									random.add(pc);	
 									for(int i = 0;i<random.size();i++)
 										System.out.println("현재 실행중인 pc 번호 : "+random.get(i));
-			
+									
 									gui.insert(msg,pc);  // 받아온 아이디, pc번호를 server_main으로 넘긴다.
 								}
 							}
