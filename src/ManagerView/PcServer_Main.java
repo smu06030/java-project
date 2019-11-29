@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -84,6 +82,14 @@ public class PcServer_Main extends JFrame implements ActionListener {
 		
 		// pc자리 세팅
 		center.setLayout(new GridLayout(0,5,0,0));
+		if(checking.getSeatNum() <= 10)
+			center.setPreferredSize(new Dimension(1500,400));
+		else if(checking.getSeatNum() <= 15)
+			center.setPreferredSize(new Dimension(1500,700));
+		else if(checking.getSeatNum() <= 25)
+			center.setPreferredSize(new Dimension(1500,1000));
+		else if(checking.getSeatNum() <= 30)
+			center.setPreferredSize(new Dimension(1500,1300));
 		center.setBackground(new Color(22,28,24));
 		center.setBorder(null);
 
@@ -92,6 +98,8 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			pcFrame[seat].setBackground(new Color(22,28,24));
 			center.add(pcFrame[seat]);
 		}
+		JScrollPane sc = new JScrollPane(center);
+		sc.setBorder(null);
 		
 		/*---------------------------- 로그 ------------------------------*/
 		
@@ -145,7 +153,7 @@ public class PcServer_Main extends JFrame implements ActionListener {
 		
 		// 컨테이너에 top, center, bottom 추가
 		ct.add(top,BorderLayout.NORTH);
-		ct.add(center,BorderLayout.CENTER);
+		ct.add(sc,BorderLayout.CENTER);
 		ct.add(bottom,BorderLayout.SOUTH);
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -189,27 +197,20 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			textarea.setBounds(80,50,150,150);
 			textarea.setBackground(new Color(57,56,54));
 			textarea.setBorder(new LineBorder(Color.BLACK,2));
-			
-			int y = 20;//52
-			
+			//textarea.setPreferredSize(new Dimension(100,100));
+			int y = 20;
+
 			for(int i = 0;i<5;i++) {
-				if(i == 0) {
+				if(i == 0)
 					label[i] = new JLabel("PC "+(numSeat+1)+"번");
-					label[i].setBounds(85,y,143,40);// 82,y,146,20
-					y+= 20;
-					label[i].setForeground(new Color(221,228,236));
-				}
-				else {
+				else
 					label[i] = new JLabel("");
-					label[i].setBounds(85,y,143,20);// 82,y,146,20
-					y+= 20;
-					label[i].setForeground(new Color(221,228,236));
-				}
+				label[i].setBounds(85,y,143,20);// 82,y,146,20
+				label[i].setForeground(new Color(221,228,236));
+				y+= 20;
 				//label[i].setOpaque(true);
-				
 				add(label[i], i);
 			}
-			
 			add(textarea,5);
 		}
 	}

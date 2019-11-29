@@ -80,9 +80,12 @@ public class Store_Management extends JFrame implements ActionListener{
 		try {
 			String num = JOptionPane.showInputDialog("좌석 수를 입력해주세요");
 			int seatNum = Integer.parseInt(num);
-			
-			checking.seatNum(seatNum);
-			JOptionPane.showMessageDialog(null, "<html>좌석이 수정 되었습니다<br>리부팅해주세요.</html>");		
+			if(seatNum>30 || seatNum < 1)
+				JOptionPane.showMessageDialog(null, "1~30개만 입력해주세요");
+			else {
+				checking.seatNum(seatNum);
+				JOptionPane.showMessageDialog(null, "<html>좌석이 수정 되었습니다<br>리부팅해주세요.</html>");
+			}
 		}catch(NumberFormatException e1) {
 			JOptionPane.showMessageDialog(null, "숫자를 입력해 주세요");
 		}
