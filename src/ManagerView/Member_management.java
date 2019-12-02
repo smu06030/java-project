@@ -290,20 +290,16 @@ public class Member_management extends JFrame implements ActionListener, MouseLi
 			
 			rs = pstmt.executeQuery();
 			// 받아온 정보를 input에다가 저장한다.
-			String input[] = new String[6];
-			
+			Vector<String> inputs = new Vector<String>();
 			// table을 초기화 시킨다.
 			model.setNumRows(0);
+			int i = 0;
 			
 			while(rs.next()) {
-				input[0] = rs.getString("아이디");
-				input[1] = rs.getString("비밀번호");
-				input[2] = rs.getString("이름");
-				input[3] = rs.getString("생년월일");
-				input[4] = rs.getString("휴대폰");
-				input[5] = rs.getString("이메일");
-				model.addRow(input);	
+				for(int j = 0;j<member.length;j++)
+					inputs.add(rs.getString(member[i++]));
 			}
+			model.addRow(inputs);
 			
 			pstmt.close();
 			conn.close();
@@ -325,20 +321,16 @@ public class Member_management extends JFrame implements ActionListener, MouseLi
 			
 			rs = pstmt.executeQuery();
 			// 받아온 정보를 input에다가 저장한다.
-			String input[] = new String[6];
-			
+			Vector<String> inputs = new Vector<String>();
 			// table을 초기화 시킨다.
 			model.setNumRows(0);
+			int i = 0;
 			
 			while(rs.next()) {
-				input[0] = rs.getString("아이디");
-				input[1] = rs.getString("비밀번호");
-				input[2] = rs.getString("이름");
-				input[3] = rs.getString("생년월일");
-				input[4] = rs.getString("휴대폰");
-				input[5] = rs.getString("이메일");
-				model.addRow(input);	
+				for(int j = 0;j<member.length;j++)
+					inputs.add(rs.getString(member[i++]));
 			}
+			model.addRow(inputs);
 			
 			pstmt.close();
 			conn.close();
@@ -359,18 +351,16 @@ public class Member_management extends JFrame implements ActionListener, MouseLi
 			
 			rs = pstmt.executeQuery();
 			// 받아온 정보를 input에다가 저장한다.
-			String input[] = new String[6];
+			String inputs[] = new String[6];
 			// table을 초기화 시킨다.
 			model.setNumRows(0);
+			int i;
 			
 			while(rs.next()) {
-				input[0] = rs.getString("아이디");
-				input[1] = rs.getString("비밀번호");
-				input[2] = rs.getString("이름");
-				input[3] = rs.getString("생년월일");
-				input[4] = rs.getString("휴대폰");
-				input[5] = rs.getString("이메일");
-				model.addRow(input);	
+				i = 0;
+				for(int j = 0;j<member.length;j++,i++)
+					inputs[i] = rs.getString(member[i]);
+				model.addRow(inputs);
 			}
 
 			pstmt.close();
