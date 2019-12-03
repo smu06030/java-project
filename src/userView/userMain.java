@@ -161,7 +161,8 @@ public class userMain extends JFrame implements ActionListener {
 			System.exit(0);
 			
 		}else if(e.getActionCommand().equals("먹거리 주문")) {
-			
+			// 먹거리 주문
+			// ID,pcNumber만 넘겨준다.
 		}else if(e.getActionCommand().equals("회원 정보")) {
 			// 아이디를 넘겨준다. 
 		}

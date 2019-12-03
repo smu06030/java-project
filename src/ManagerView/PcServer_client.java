@@ -49,6 +49,8 @@ public class PcServer_client extends JFrame {
 								}
 								System.out.println("지울 PC번호 : "+pc);
 								gui.insert(msg,pc); // 받아온 아이디, pc번호를 server_main으로 넘긴다.
+							}else if(msg.equals("주문")) {
+								gui.insert(msg, pc);
 							}else {
 								for(int i = 0;i<random.size();i++) {
 									if(random.get(i) == pc) {

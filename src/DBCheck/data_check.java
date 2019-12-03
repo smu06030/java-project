@@ -16,11 +16,17 @@ public class data_check {
 	
 	/*---------------------------- DB------------------------------*/
 	
+	public data_check(){
+		try {
+			conn = DriverManager.getConnection(url,user,pw);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	// 회원DB에서 아이디와 비밀번호가 있는지 확인하는 메소드
 	public boolean check(String id, String password){
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-
 			String sql = "select * from 회원 where 아이디 = ? and 비밀번호 = ?";
 			pstmt = conn.prepareStatement(sql); 
 				
@@ -46,8 +52,6 @@ public class data_check {
 		String name = "";
 		
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "select 이름  from 회원 where 아이디 = ?";
 			pstmt = conn.prepareStatement(sql);
 			
@@ -73,8 +77,6 @@ public class data_check {
 		int hour = 0;
 		
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-
 			String sql = "select 회원시간  from 회원 where 아이디 = ?";
 			pstmt = conn.prepareStatement(sql);
 			
@@ -100,8 +102,6 @@ public class data_check {
 		int minute = 0;
 		
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "select 회원분  from 회원 where 아이디 = ?";
 			pstmt = conn.prepareStatement(sql);
 			
@@ -127,8 +127,6 @@ public class data_check {
 		int sec = 0;
 		
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-
 			String sql = "select 회원초  from 회원 where 아이디 = ?";
 			pstmt = conn.prepareStatement(sql);
 			
@@ -154,8 +152,6 @@ public class data_check {
 	public void timeInsert(int hour, int minute, int sec, String id){
 		
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "update 회원 set 회원시간 = ?, 회원분 = ?, 회원초 = ? where 아이디 = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -177,8 +173,6 @@ public class data_check {
 	// id 중복체크
 	public boolean id_check(String id) {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "select * from 회원  where 아이디 = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -204,8 +198,6 @@ public class data_check {
 	// 회원정보를 회원 DB에 저장
 	public void member_join(String id, String pass, String name, String birth, int hour, int minute, String phone, String email, int sec) {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			// 생년월일을 date형식으로 변경
 			Date date = Date.valueOf(birth);
 			
@@ -236,8 +228,6 @@ public class data_check {
 	// 회원정보를 회원 DB에서 수정
 	public void member_update(String id, String pass, String name, String birth, String phone, String email) {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			// 생년월일을 date형식으로 변경
 			Date date = Date.valueOf(birth);
 			
@@ -265,8 +255,6 @@ public class data_check {
 	// 회원정보를 회원 DB에서 삭제
 	public void member_delete(String id) {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "delete from 회원 where 아이디 = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -285,8 +273,6 @@ public class data_check {
 	// 지점명을 가져온다.
 	public String Store_name() {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "select 지점명 from 매장 where 사업자번호 = ?";
 
 			pstmt = conn.prepareStatement(sql);
@@ -311,8 +297,6 @@ public class data_check {
 	// 사업자번호를 가져온다.
 	public String Store_num() {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "select 사업자번호 from 매장 where 지점명 = ?";
 
 			pstmt = conn.prepareStatement(sql);
@@ -337,8 +321,6 @@ public class data_check {
 	// 좌석 수를 변경한다.
 	public void seatNum(int num) {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "update 매장 set 좌석수 = ? where 사업자번호 = ?";
 
 			pstmt = conn.prepareStatement(sql);
@@ -358,8 +340,6 @@ public class data_check {
 	// 좌석 수를 가져온다.
 	public int getSeatNum() {
 		try {
-			conn = DriverManager.getConnection(url,user,pw);
-			
 			String sql = "select 좌석수 from 매장 where 사업자번호 = ?";
 
 			pstmt = conn.prepareStatement(sql);

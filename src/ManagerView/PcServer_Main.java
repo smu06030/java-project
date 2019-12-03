@@ -8,6 +8,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -19,8 +24,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import DBCheck.data_check;
 
@@ -28,7 +36,7 @@ public class PcServer_Main extends JFrame implements ActionListener {
 	private static data_check checking = new data_check();
 	private static clock c[] = new clock[checking.getSeatNum()];
 	private JTextArea txt = new JTextArea(5,8);
-	private String btnName[] = {"당일내역","회원관리","상품관리","지출","매장관리"};
+	private String btnName[] = {"당일내역","회원관리","상품관리","매장관리","충전관리"};
 	private Container ct;
 	private static JPanel pcFrame[] = new pcFrame[checking.getSeatNum()];
 	private JPanel top = new JPanel();
@@ -39,12 +47,12 @@ public class PcServer_Main extends JFrame implements ActionListener {
 	private JButton btn[] = new JButton[5];
 	private JTabbedPane tabbed_log = new JTabbedPane();
 	private JTabbedPane tabbed_memo = new JTabbedPane();
-	private String column[] = {"날짜","주문번호","상품명","아이디","수량","가격","피씨번호"};
+	private static String column[] = {"날짜","주문번호","상품명","아이디","수량","가격","피씨번호"};
 	private Vector<String> title;
 	private Vector<Vector<String>> content = new Vector<Vector<String>>();
-	private DefaultTableModel model = null;
+	private static DefaultTableModel model = null;
 	private JTable table;
-	private JScrollPane scroll;
+	private static JScrollPane scroll;
 	
 	private static int count = checking.getSeatNum();
 	private static int cnt = 0;
@@ -118,14 +126,29 @@ public class PcServer_Main extends JFrame implements ActionListener {
 		}
 		
 		// 테이블 세팅
-		model = new DefaultTableModel(content,title);
+		model = new DefaultTableModel(content,title) {
+			public boolean isCellEditable(int row, int column) {  // 테이블 수정, 입력 불가
+				return false;
+			}	
+		};
+		// defaultTableCellRenderer 객체 생성
+		DefaultTableCellRenderer dr = new DefaultTableCellRenderer();
+		// 랜더러의 가로 정렬을 center로 지정
+		dr.setHorizontalAlignment(SwingConstants.CENTER);
 		table = new JTable(model);
+		// 정렬할 테이블의  컬럼 모델을 가져온다.
+		TableColumnModel tm = table.getColumnModel();
+		// 모델 컬럼의 갯수만큼 가운데 정렬 해준다.
+		for(int i = 0; i<table.getColumnCount();i++)
+			tm.getColumn(i).setCellRenderer(dr);
 		table.getTableHeader().setFont(new Font("나눔고딕",Font.BOLD,18));
+		table.getTableHeader().setBackground(Color.LIGHT_GRAY);
 		table.setFont(new Font("나눔고딕",Font.BOLD,18));
+		table.setRowHeight(30);
 		scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(900,200));
-		log.add(scroll);
 		
+		log.add(scroll);
 		// 탭에 로그 테이블 추가
 		tabbed_log.addTab("   로그   ",log);
 		tabbed_log.setBorder(BorderFactory.createEmptyBorder(0,20,20,0));
@@ -233,6 +256,8 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			label1.setText("사용 현황 "+cnt+" : "+count);
 			
 			l2.setText("");l3.setText("");l4.setText("");
+		}else if(msg.equals("주문")){
+			order();
 		}else {
 			// 받아온 id로 회원DB에 이름 가져오기
 			String name = checking.id_search(msg);
@@ -294,7 +319,7 @@ public class PcServer_Main extends JFrame implements ActionListener {
 					Thread.sleep(1000);
 				}
 			}catch(InterruptedException e) {
-//				cl.setText("");
+
 			}
 			
 		}
@@ -312,5 +337,49 @@ public class PcServer_Main extends JFrame implements ActionListener {
 		
 		PcServer pcServer = new PcServer();
 		pcServer.startServer();
+		
+		// 데이터베이스 연결
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println("JDBC 드라이버 로드 에러");
+		}
 	}
+	
+	
+	/*---------------------------- DB ------------------------------*/
+	private static Connection conn;
+	private static PreparedStatement pstmt;
+	private static String url = "jdbc:mysql://localhost:3306/pcbang?serverTimezone=UTC";
+	private static String user = "root";
+	private static String pw = "dlscjf158!A";
+	
+	// 먹거리 주문을 했을 때 정보를 가져온다.
+	public static void order() {
+		try {
+			conn = DriverManager.getConnection(url,user,pw);
+			
+			String sql = "select * from 결제";
+			pstmt = conn.prepareStatement(sql); 
+			
+			ResultSet rs = pstmt.executeQuery();
+			// 받아온 정보를 input에다가 저장한다.
+			String inputs[] = new String[7];
+			// table을 초기화 시킨다.
+			model.setNumRows(0);
+			int i;
+						
+			while(rs.next()) {
+				i = 0;
+				for(int j = 0;j<column.length;j++,i++)
+					inputs[i] = rs.getString(column[i]);
+				model.addRow(inputs);
+			}
+			scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
+			
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+	
 }
