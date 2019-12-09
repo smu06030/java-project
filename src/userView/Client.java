@@ -23,7 +23,7 @@ public class Client {
 	data_check checking = new data_check();
 	int random = checking.getSeatNum();
 	
-	Client(){
+	public Client(){
 		
 	}
 	
@@ -101,10 +101,10 @@ public class Client {
 		try {
 			out = new DataOutputStream(socket.getOutputStream());
 			out.writeUTF(msg);
-			out.writeInt(intmsg);
-						
+			out.writeInt(intmsg);			
 		}catch(Exception e) {
 			stopClient();
+			System.out.println(e.getMessage());
 		}
 	}
 }

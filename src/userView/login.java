@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import DBCheck.data_check;
+import loginView.FindPage;
 
 // 지금 로그인 했을 때 같은 아이디 사용자가 사용중이면 이 아이디는 사용중 입니다 라고 띄우기 - 실패
 // 그리고 실행중인 pc가 10대 이상 넘어갔을 때 모든 pc가 사용중 입니다 라고 출력 - 
@@ -166,10 +167,11 @@ public class login extends JFrame implements ActionListener{
 					if((hour != 0 || minute != 0 || sec != 0)) { //여기에서 사용중인지 검사.
 						JOptionPane.showMessageDialog(null,"로그인 성공했습니다.");
 						// 로그인에 성공하면 서버에 접속하기 위해 ip주소와 port번호와 랜덤으로 pc번호를 보낸다.
-						String ip = "127.0.0.1";
+						//String ip = "172.111.117.107";
+						String ip = "192.168.0.9";
 						int port = 9999;
 					
-						userMain main = new userMain(ip,port,ids,hour,minute,sec);
+						userMain main = new userMain(ip,port,ids);
 						main.setVisible(true);
 						main.setSize(400,400);
 						main.setLocationRelativeTo(null);
@@ -194,7 +196,13 @@ public class login extends JFrame implements ActionListener{
 			member.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 		}else if(e.getActionCommand().equals("ID/PW찾기")) {
+			FindPage win = new FindPage();
+			win.setTitle("ID/PW 찾기");
+			win.setSize(500, 500);
+			win.setLocationRelativeTo(null);
 			
+			win.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			win.setVisible(true);
 		}
 	}
 	

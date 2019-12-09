@@ -1,0 +1,102 @@
+<------------- 결제 테이블  ------------->
+CREATE TABLE `결제` (
+   `날짜` date NOT NULL,
+   `주문번호` int(11) NOT NULL AUTO_INCREMENT,
+   `상품명` varchar(20) NOT NULL,
+   `아이디` varchar(20) NOT NULL,
+   `수량` int(11) NOT NULL,
+   `가격` int(11) NOT NULL,
+   `피씨번호` int(11) NOT NULL,
+   `결제수단` varchar(20) NOT NULL,
+   PRIMARY KEY (`주문번호`),
+   KEY `상품번호` (`상품명`),
+   KEY `아이디` (`아이디`),
+   CONSTRAINT `결제_ibfk_2` FOREIGN KEY (`아이디`) REFERENCES `회원` (`아이디`)
+ );
+
+
+<------------- 관리자 테이블  ------------->
+CREATE TABLE `관리자` (
+   `아이디` varchar(20) NOT NULL,
+   `비밀번호` varchar(20) NOT NULL,
+   `직급` int(11) NOT NULL,
+   PRIMARY KEY (`아이디`)
+ );
+
+insert into 관리자 values('admin','1111',1);
+insert into 관리자 values('smu06030','1234',0);
+
+<------------- 매장 테이블  ------------->
+CREATE TABLE `매장` (
+   `지점명` varchar(30) NOT NULL,
+   `사업자번호` varchar(20) NOT NULL,
+   `좌석수` int(11) NOT NULL DEFAULT '10',
+   PRIMARY KEY (`사업자번호`)
+ );
+
+insert into 매장 values('100억pc방','1234-5678',5);
+
+<------------- 상품 테이블  ------------->
+CREATE TABLE `상품` (
+   `상품명` varchar(20) NOT NULL,
+   `가격` int(11) NOT NULL,
+   `재고량` int(11) NOT NULL,
+   `이미지` varchar(40) NOT NULL,
+   `분류` char(3) DEFAULT NULL,
+   PRIMARY KEY (`상품명`),
+   KEY `분류` (`분류`),
+   CONSTRAINT `상품_ibfk_1` FOREIGN KEY (`분류`) REFERENCES `상품분류` (`분류코드`)
+ );
+
+insert into 상품 values('맛짬뽕',3000,30,'jjampong.jpg','001');
+insert into 상품 values('짜파게티',3000,30,'jja.jpg','001');
+insert into 상품 values('진라면',3000,30,'jin.jpg','001');
+insert into 상품 values('게토레이',1500,30,'geto.jpg','002');
+insert into 상품 values('콜라',2000,30,'cola.jpg','002');
+insert into 상품 values('파워에이드',1500,30,'powerade.jpg','002');
+insert into 상품 values('뿌셔뿌셔',2000,30,'bbushu.jpg','003');
+insert into 상품 values('포카칩',2000,30,'forcar.jpg','003');
+insert into 상품 values('쫄병',2000,30,'jol.jpg','003');
+
+<------------- 상품분류 테이블  ------------->
+CREATE TABLE `상품분류` (
+   `분류코드` char(3) NOT NULL,
+   `분류명` varchar(20) NOT NULL,
+   PRIMARY KEY (`분류코드`)
+ );
+
+insert into 상품분류 values('001','라면');
+insert into 상품분류 values('002','음료');
+insert into 상품분류 values('003','과자');
+
+<------------- 충전 테이블  ------------->
+CREATE TABLE `충전` (
+   `상품이름` varchar(20) NOT NULL,
+   `충전시간` int(11) NOT NULL,
+   `가격` int(11) NOT NULL,
+   PRIMARY KEY (`상품이름`)
+ );
+
+insert into 충전 values('1시간',1,500);
+insert into 충전 values('2시간',2,1000);
+insert into 충전 values('3시간',3,1500);
+
+<------------- 회원 테이블  ------------->
+CREATE TABLE `회원` (
+   `아이디` varchar(20) NOT NULL,
+   `비밀번호` varchar(20) NOT NULL,
+   `이름` varchar(20) NOT NULL,
+   `생년월일` date NOT NULL,
+   `회원시간` int(11) NOT NULL,
+   `회원분` int(11) NOT NULL,
+   `휴대폰` varchar(20) NOT NULL,
+   `이메일` varchar(30) NOT NULL,
+   `회원초` int(11) NOT NULL,
+   PRIMARY KEY (`아이디`)
+ );
+
+insert into 회원 values('goatmxj48','sorry2205','조민주','1998-01-10',0,0,'01012345678','goatmxj48@naver.com',0);
+insert into 회원 values('smu06030','dlscjf158','유인철','2000-01-03',0,0,'01012345678','smu06030@naver.com',0);
+insert into 회원 values('inwoo14','alstjr1020','설민석','1999-07-13',0,0,'01012345678','alstjr1020@naver.com',0);
+
+

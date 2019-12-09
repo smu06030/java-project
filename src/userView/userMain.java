@@ -5,8 +5,6 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
 import DBCheck.data_check;
+import doyeon.user.FoodOrder;
+import doyeon.user.FoodOrder_Data;
+import doyeon.user.FoodOrder_Object;
+import doyeon.user.UserInfo;
 
 public class userMain extends JFrame implements ActionListener {
 	// Client 객체 생성
@@ -23,20 +25,17 @@ public class userMain extends JFrame implements ActionListener {
 	private clock c;
 	
 	private String ip,id = null;
-	private int port,pcNumber,hour = 0,minute = 0,sec = 15;
+	private int port,pcNumber;
 	private String pcNum;
 	
 	private Container ct;
 	private JLabel pclabel,idLabel,idview,hourLabel,hourview;
 	private JButton close,food,member_info;
 	
-	userMain(String ip, int port, String id,int hour, int minute, int sec){
+	userMain(String ip, int port, String id){
 		this.ip = ip;
 		this.port = port;
 		this.id = id;
-		this.hour = hour;
-		this.minute = minute;
-		this.sec = sec;
 		
 		/*---------------------------- 클라이언트 접속 ------------------------------*/
 	
@@ -47,17 +46,17 @@ public class userMain extends JFrame implements ActionListener {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		start(hour,minute,sec);	
+		start();	
 	}
 	
 	// 테스트용 생생자
-	userMain(){
-		start(hour,minute,sec);
-	}
+//	userMain(){
+//		start(hour,minute,sec);
+//	}
 
 	/*---------------------------- 사용자 화면 ------------------------------*/
 	
-	public void start(int hour, int minute, int sec) {
+	public void start() {
 		// 현재 pc 번호를 받아와서 main 화면에 출력
 		pcNumber = client.pcNumber;
 		pcNum = Integer.toString(pcNumber);
@@ -132,7 +131,7 @@ public class userMain extends JFrame implements ActionListener {
 		ct.add(member_info);
 		
 		// 받아온 시간으로 스레드를 돌린다.
-		c = new clock(hourview);
+		c = new clock(hourview,id);
 		c.start();
 		
 		/*---------------------------- 이벤트 ------------------------------*/
@@ -152,19 +151,29 @@ public class userMain extends JFrame implements ActionListener {
 			client.send("종료",pcNumber);
 			
 			// 남은 시간 출력
-			System.out.println("남은 시간 "+hour+" 남은 분 "+minute+" 남은 초 "+sec+" id "+id);
+			//System.out.println("남은 시간 "+hour+" 남은 분 "+minute+" 남은 초 "+sec+" id "+id);
 			
 			// 남은 시간을 회원DB에 저장한다.
-			checking.timeInsert(hour,minute,sec,id);
+			//checking.timeInsert(hour,minute,sec,id);
 			
 			// 현재 프로그램 종료
 			System.exit(0);
 			
 		}else if(e.getActionCommand().equals("먹거리 주문")) {
-			// 먹거리 주문
-			// ID,pcNumber만 넘겨준다.
+		     FoodOrder_Data myData = new FoodOrder_Data();
+		     myData.setPcNumber(""+pcNumber);
+		     myData.setUserID(id);
+		     myData.setClient(client);
+	
+		     FoodOrder_Object myComponent = new FoodOrder_Object();
+		     FoodOrder foodOrder = new FoodOrder(myData, myComponent);
+		     myComponent.setParent(foodOrder);
+		     
 		}else if(e.getActionCommand().equals("회원 정보")) {
-			// 아이디를 넘겨준다. 
+			UserInfo ui = new UserInfo(id);
+			ui.setVisible(true);
+			ui.setLocationRelativeTo(null);
+			ui.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		}
 	}
 	
@@ -173,15 +182,21 @@ public class userMain extends JFrame implements ActionListener {
 	// 시간
 	class clock extends Thread{
 		JLabel cl;
-		
-		clock(JLabel cl){
+		String id;
+		int hour, minute, sec;
+		clock(JLabel cl, String id){
 			this.cl = cl;
+			this.id = id;
 		}
 		public void run() {
 			try {
 				while(!Thread.currentThread().isInterrupted()) {
+					hour = checking.time_hour(id);
+					minute = checking.time_minute(id);
+					sec = checking.time_sec(id);
+					
 					cl.setText((Integer.toString(hour))+"시간"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초");
-
+					
 					// 선불 요금제 일 때
 					if(hour == 0 && minute == 0 && sec == 0) {
 						// 클라이언트에게 종료 메세지 전송
@@ -205,10 +220,14 @@ public class userMain extends JFrame implements ActionListener {
 					}
 					
 					if(minute >= 1 && sec == 0) {
-						sec = 59;
+						sec = 60;
 						minute--;
+						
 					}
 					sec--;
+					
+					// 시간 저장
+					checking.timeInsert(hour,minute,sec,id);
 					
 					Thread.sleep(1000);
 				}
@@ -223,10 +242,10 @@ public class userMain extends JFrame implements ActionListener {
 	
 	public static void main(String[] args) {
 		// 바로 실행은 테스트용
-		userMain main = new userMain();
-		main.setVisible(true);
-		main.setSize(400,400);
-		main.setLocationRelativeTo(null);
-		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		userMain main = new userMain();
+//		main.setVisible(true);
+//		main.setSize(400,400);
+//		main.setLocationRelativeTo(null);
+//		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

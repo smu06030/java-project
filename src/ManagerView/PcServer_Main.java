@@ -13,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -31,36 +33,39 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import DBCheck.data_check;
+import doyeon.admin.ChargeSet;
+import doyeon.admin.OrderList;
+import loginView.Product_Management;
 
 public class PcServer_Main extends JFrame implements ActionListener {
 	private static data_check checking = new data_check();
 	private static clock c[] = new clock[checking.getSeatNum()];
-	private JTextArea txt = new JTextArea(5,8);
-	private String btnName[] = {"당일내역","회원관리","상품관리","매장관리","충전관리"};
-	private Container ct;
 	private static JPanel pcFrame[] = new pcFrame[checking.getSeatNum()];
+	private static JLabel label1 = new JLabel();
+	private static String column[] = {"날짜","주문번호","상품명","아이디","수량","가격","피씨번호","결제수단"};
+	private static JScrollPane scroll;
+	private static DefaultTableModel model = null;
+	private JTable table;
+	private String btnName[] = {"당일내역","회원관리","상품관리","매장관리","충전관리"};
+	private JTextArea txt = new JTextArea(5,8);
+	private Container ct;
 	private JPanel top = new JPanel();
 	private JPanel center = new JPanel();
 	private JPanel bottom = new JPanel();
-	private static JLabel label1 = new JLabel();
 	private JLabel label[] = new JLabel[5];
 	private JButton btn[] = new JButton[5];
 	private JTabbedPane tabbed_log = new JTabbedPane();
 	private JTabbedPane tabbed_memo = new JTabbedPane();
-	private static String column[] = {"날짜","주문번호","상품명","아이디","수량","가격","피씨번호"};
 	private Vector<String> title;
 	private Vector<Vector<String>> content = new Vector<Vector<String>>();
-	private static DefaultTableModel model = null;
-	private JTable table;
-	private static JScrollPane scroll;
 	
 	private static int count = checking.getSeatNum();
 	private static int cnt = 0;
 	private static int pcbun = 0;
 	private int x = 200, y = 100;
 	private int seat;
-	
-	PcServer_Main(){
+
+	PcServer_Main(String position){		
 		ct = getContentPane();		
 		ct.setLayout(new BorderLayout());
 		
@@ -84,6 +89,10 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			btn[i].setPreferredSize(new Dimension(180,60));
 			btn[i].addActionListener(this);
 			top.add(btn[i]);
+		}
+		if(position.equals("1")) {
+			btn[3].setEnabled(false);
+			btn[4].setEnabled(false);
 		}
 		
 		/*---------------------------- pc자리 ------------------------------*/
@@ -181,6 +190,9 @@ public class PcServer_Main extends JFrame implements ActionListener {
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("당일내역")) {
+			OrderList ol = new OrderList();
+			ol.setLocationRelativeTo(null);
+			ol.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 		}else if(e.getActionCommand().equals("회원관리")) {
 			Member_management member = new Member_management();
@@ -192,9 +204,12 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			member.setResizable(false);
 			member.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		}else if(e.getActionCommand().equals("상품관리")) {
-			
-		}else if(e.getActionCommand().equals("지출")) {
-			
+			Product_Management p = new Product_Management();
+			p.setTitle("재무 관리");
+			p.setSize(550, 500);
+			p.setVisible(true);
+			p.setLocationRelativeTo(null);
+			p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		}else if(e.getActionCommand().equals("매장관리")) {
 			Store_Management sm = new Store_Management();
 			sm.setVisible(true);
@@ -202,7 +217,13 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			sm.setTitle("매장관리");
 			sm.setLocationRelativeTo(null);
 			sm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		}	
+		}else if(e.getActionCommand().equals("충전관리")) {
+			ChargeSet charge = new ChargeSet();
+			charge.setVisible(true);
+			charge.setTitle("충전관리");
+			charge.setLocationRelativeTo(null);
+			charge.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
 	}
 	
 	/*---------------------------- pc좌석 panel ------------------------------*/
@@ -261,9 +282,6 @@ public class PcServer_Main extends JFrame implements ActionListener {
 		}else {
 			// 받아온 id로 회원DB에 이름 가져오기
 			String name = checking.id_search(msg);
-			int hour = checking.time_hour(msg);
-			int minute = checking.time_minute(msg);
-			int sec = checking.time_sec(msg);
 			
 			pcFrame[pc-1].getComponent(5).setBackground(new Color(23,103,0));
 	
@@ -271,7 +289,7 @@ public class PcServer_Main extends JFrame implements ActionListener {
 			JLabel l3 = (JLabel)pcFrame[pc-1].getComponent(3);
 			JLabel l4 = (JLabel)pcFrame[pc-1].getComponent(4);
 			
-			c[pc-1] = new clock(l4,hour,minute,sec);
+			c[pc-1] = new clock(l4,msg);
 			c[pc-1].start();
 			
 			cnt++;
@@ -288,47 +306,34 @@ public class PcServer_Main extends JFrame implements ActionListener {
 	static class clock extends Thread{
 		
 		JLabel cl;
-		int hour,minute,sec;
-		clock(JLabel cl,int hour, int minute, int sec){
+		int hour =0, minute=0, sec=10;
+		String id;
+		clock(JLabel cl,String id){
 			this.cl = cl;
-			this.hour = hour;
-			this.minute = minute;
-			this.sec = sec;
+			this.id = id;
 		}
 		
 		public void run() {
 			try {
 				while(!Thread.currentThread().isInterrupted()){
-					cl.setText("잔여시간 : "+(Integer.toString(hour))+"시간"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초");		
-					// 선불 요금제 일 때
-					if(hour == 0 && minute == 0 && sec == 0) {
-						break;
-					}
-				
-					if(hour >= 1 && minute == 0 && sec == 0) {
-						minute = 60;
-						hour--;	
-					}
+					hour = checking.time_hour(id);
+					minute = checking.time_minute(id);
+					sec = checking.time_sec(id);
 					
-					if(minute >= 1 && sec == 0) {
-						sec = 59;
-						minute--;
-					}
-					sec--;
+					cl.setText("시간 : "+(Integer.toString(hour))+"시간"+(Integer.toString(minute))+"분"+(Integer.toString(sec))+"초");		
 					
 					Thread.sleep(1000);
 				}
 			}catch(InterruptedException e) {
 
-			}
-			
+			}	
 		}
 	}
 	
 	/*---------------------------- 메인 ------------------------------*/
 	
 	public static void main(String[] args) {
-		PcServer_Main pc = new PcServer_Main();
+		PcServer_Main pc = new PcServer_Main("0");
 		pc.setVisible(true);
 		pc.setSize(1600,900);
 		pc.setTitle("관리자 메인");
@@ -358,13 +363,21 @@ public class PcServer_Main extends JFrame implements ActionListener {
 	public static void order() {
 		try {
 			conn = DriverManager.getConnection(url,user,pw);
+		    
+			Calendar cal = Calendar.getInstance();
+		    cal.setTime(new Date());
+		    String today;
+		    today = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE);
+		      
 			
-			String sql = "select * from 결제";
+			String sql = "select * from 결제 where 날짜 = ? order by 주문번호 desc";
 			pstmt = conn.prepareStatement(sql); 
+			
+			pstmt.setString(1, today);
 			
 			ResultSet rs = pstmt.executeQuery();
 			// 받아온 정보를 input에다가 저장한다.
-			String inputs[] = new String[7];
+			String inputs[] = new String[8];
 			// table을 초기화 시킨다.
 			model.setNumRows(0);
 			int i;
