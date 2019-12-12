@@ -167,8 +167,8 @@ public class login extends JFrame implements ActionListener{
 					if((hour != 0 || minute != 0 || sec != 0)) { //여기에서 사용중인지 검사.
 						JOptionPane.showMessageDialog(null,"로그인 성공했습니다.");
 						// 로그인에 성공하면 서버에 접속하기 위해 ip주소와 port번호와 랜덤으로 pc번호를 보낸다.
-						//String ip = "172.111.117.107";
-						String ip = "192.168.0.9";
+						String ip = "172.111.117.107";
+						//String ip = "192.168.0.9";
 						int port = 9999;
 					
 						userMain main = new userMain(ip,port,ids);
