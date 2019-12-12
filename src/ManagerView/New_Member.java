@@ -8,9 +8,9 @@ import java.awt.event.*;
 import java.sql.*;
 
 class New_Member extends JFrame implements ActionListener{
-   String url = "jdbc:mysql://192.168.0.9:3306/pcbang?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false";
-   String user = "minsuk";
-   String pw = "1234";
+   String url = "jdbc:mysql://localhost:3306/pcbang?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true&useSSL=false";
+   String user = "root";
+   String pw = "dlscjf158!A";
 
    JPanel id_panel, name_panel, pwd_panel, Re_pwd_panel, Re_pwd_warn_panel, position_panel, btn_panel;
    JPanel tot_panel;

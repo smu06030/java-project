@@ -16,8 +16,8 @@ import java.util.concurrent.Executors;
 public class PcServer {
 	public static Vector<PcServer_client> clients = new Vector<PcServer_client>();
 	
-	//private String ip = "172.111.117.107";
-	private String ip = "192.168.0.9";
+	private String ip = "172.111.117.107";
+	//private String ip = "192.168.0.9";
 	private int port = 9999;
 	private ServerSocket serversocket;
 	private Socket socket;
